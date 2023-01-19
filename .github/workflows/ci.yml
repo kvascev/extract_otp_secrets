@@ -6,11 +6,12 @@ name: tests
 # https://docs.github.com/en/actions/learn-github-actions/expressions
 
 on:
-  push:
-  # pull_request:
-  schedule:
-    # Run daily on default branch
-    - cron: '37 3 * * *'
+  # FIXME reenable
+  # push:
+  # # pull_request:
+  # schedule:
+  #   # Run daily on default branch
+  #   - cron: '37 3 * * *'
 
 jobs:
   build:

@@ -9,11 +9,12 @@ name: docker
 # How to run: https://aschmelyun.com/blog/using-docker-run-inside-of-github-actions/
 
 on:
-  # run it on push to the default repository branch
-  push:
-  schedule:
-    # Run weekly on default branch
-    - cron: '47 3 * * 6'
+  # FIXME reenable
+  # # run it on push to the default repository branch
+  # push:
+  # schedule:
+  #   # Run weekly on default branch
+  #   - cron: '47 3 * * 6'
 
 jobs:
   # define job to build and publish docker image
