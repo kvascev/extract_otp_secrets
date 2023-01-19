@@ -80,8 +80,10 @@ jobs:
             # TODO --target-arch universal2
             CMD_BUILD: >
               pyinstaller -y --add-data $macos_python_path/__yolo_v3_qr_detector/:__yolo_v3_qr_detector/ --onefile --argv-emulation src/extract_otp_secrets.py &&
-              cd dist/ &&
-              zip -r9 extract_otp_secrets extract_otp_secrets.app/
+              ls -R
+              #  &&
+              # cd dist/ &&
+              # zip -r9 extract_otp_secrets extract_otp_secrets.app/
             OUT_FILE_NAME: extract_otp_secrets.zip
             ASSET_NAME: extract_otp_secrets (Universal2)
             ASSET_MIME: application/zip
@@ -118,7 +120,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -U -r requirements-dev.txt
-          pip install -vvv -U .
+          pip install -U .
       - name: Display structure of installed files
         run: ls -R . $macos_python_path
       - name: Build with pyinstaller for ${{ matrix.TARGET }}
