@@ -76,6 +76,7 @@ askContinueYn() {
 interactive=false
 ignore_version_check=true
 clean=false
+clean_flag=""
 build_docker=true
 run_gui=true
 generate_result_files=false
@@ -119,6 +120,7 @@ while test $# -gt 0; do
             ;;
         -c)
             clean=true
+            clean_flag="--clean"
             shift
             ;;
     esac
@@ -330,6 +332,16 @@ cmd="$PIP wheel ."
 if $interactive ; then askContinueYn "$cmd"; else echo -e "${cyan}$cmd${reset}";fi
 eval "$cmd"
 
+# Build executable
+
+cmd="pyinstaller -y --add-data $HOME/.local/__yolo_v3_qr_detector/:__yolo_v3_qr_detector/ --onefile $clean_flag src/extract_otp_secrets.py"
+if $interactive ; then askContinueYn "$cmd"; else echo -e "${cyan}$cmd${reset}";fi
+eval "$cmd"
+
+cmd="dist/extract_otp_secrets -h"
+if $interactive ; then askContinueYn "$cmd"; else echo -e "${cyan}$cmd${reset}";fi
+eval "$cmd"
+
 # Generate results files
 
 if $generate_result_files; then
@@ -364,7 +376,6 @@ if $build_docker; then
     cmd="docker run --entrypoint /extract/run_pytest.sh --rm -v \"$(pwd)\":/files:ro extract_otp_secrets_only_txt tests/extract_otp_secrets_test.py -k 'not qreader' -vvv --relaxed"
     if $interactive ; then askContinueYn "$cmd"; else echo -e "${cyan}$cmd${reset}";fi
     eval "$cmd"
-
 
     # Build extract_otp_secrets (Debian)
     cmd="docker build . -t extract_otp_secrets --pull --build-arg RUN_TESTS=false"

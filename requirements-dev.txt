@@ -2,6 +2,7 @@ build
 flake8
 mypy
 mypy-protobuf
+pyinstaller
 pylint
 pytest
 pytest-cov
