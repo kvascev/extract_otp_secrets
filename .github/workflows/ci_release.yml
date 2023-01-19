@@ -84,9 +84,9 @@ jobs:
               #  &&
               # cd dist/ &&
               # zip -r9 extract_otp_secrets extract_otp_secrets.app/
-            OUT_FILE_NAME: extract_otp_secrets.zip
+            OUT_FILE_NAME: extract_otp_secrets
             ASSET_NAME: extract_otp_secrets (Universal2)
-            ASSET_MIME: application/zip
+            ASSET_MIME: application/x-newton-compatible-pkg
           # - os: windows-latest
           #   TARGET: windows
           #   # TODO add --icon
