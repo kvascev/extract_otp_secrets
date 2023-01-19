@@ -28,14 +28,17 @@ jobs:
       - name: Get current date
         id: date
         # Writing to env with >> $GITHUB_ENV is an alternative
+        # TODO deprecated set-output: https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
         run: echo "::set-output name=date::$(date +'%d.%m.%Y')"
       - name: Get version number
         id: version
+        # TODO deprecated set-output: https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
         run: echo "::set-output name=version::${TAG_NAME//v/}"
         env:
           TAG_NAME: ${{ github.ref }}
       - name: Create Release
         id: create_release
+        # TODO replace deprecated actions/create-release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -63,7 +66,7 @@ jobs:
           - os: ubuntu-latest
             TARGET: linux
             CMD_BUILD: >
-                pyinstaller -y --add-data __yolo_v3_qr_detector/:__yolo_v3_qr_detector/ --onefile src/extract_otp_secrets.py
+                pyinstaller -y --add-data $HOME/__yolo_v3_qr_detector/:__yolo_v3_qr_detector/ --onefile src/extract_otp_secrets.py
             OUT_FILE_NAME: extract_otp_secrets
             ASSET_MIME: application/x-executable
           # - os: macos-latest
@@ -113,6 +116,7 @@ jobs:
       # TODO create and upload hashes https://docs.github.com/en/actions/learn-github-actions/expressions#hashfiles
       - name: Upload Release Asset
         id: upload-release-asset
+        # TODO replace deprecated actions/upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
