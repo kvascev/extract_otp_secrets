@@ -509,7 +509,25 @@ Run tests in docker container:
 docker run --entrypoint /extract/run_pytest.sh --rm -v "$(pwd)":/files:ro extract_otp_secrets_only_txt tests/extract_otp_secrets_test.py -k "not qreader" --relaxed
 ```
 
-### Full local build
+### Create executables by pyinstaller
+
+#### Linux
+
+```bash
+pyinstaller -y --add-data $pythonLocation/__yolo_v3_qr_detector/:__yolo_v3_qr_detector/ --onefile src/extract_otp_secrets.py
+```
+
+Output is executable `dist/extract_otp_secrets`
+
+#### Windows
+
+```
+pyinstaller -y --add-data "%pythonLocation%\__yolo_v3_qr_detector;__yolo_v3_qr_detector" --add-binary "%pythonLocation%\pyzbar\libiconv.dll;pyzbar" --add-binary "%pythonLocation%\pyzbar\libzbar-64.dll;pyzbar" src/extract_otp_secrets.py
+```
+
+Output is `dist\extract_otp_secrets.exe`
+
+### Full local build (bash)
 
 There is a Bash script for a full local build including linting and type checking.
 
