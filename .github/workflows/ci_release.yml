@@ -47,7 +47,7 @@ jobs:
           tag_name: ${{ github.ref }}
           release_name: ${{ steps.version.outputs.version }} - ${{ steps.date.outputs.date }}
           draft: true
-          prerelease: true
+          prerelease: false
       - name: Output Release URL File
         run: echo "${{ steps.create_release.outputs.upload_url }}" > release_url.txt
       - name: Save Release URL File for publish
@@ -108,11 +108,14 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: release_url
+      - name: Display structure of downloaded files
+        run: ls -R
       - name: Get Release File Name & Upload URL
         id: get_release_info
         shell: bash
+        # TODO deprecated set-output: https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
         run: |
-          value=$(cat release_url/release_url.txt)
+          value=$(cat release_url.txt)
           echo ::set-output name=upload_url::$value
       # TODO create and upload hashes https://docs.github.com/en/actions/learn-github-actions/expressions#hashfiles
       - name: Upload Release Asset
