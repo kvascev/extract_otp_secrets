@@ -30,10 +30,6 @@ jobs:
         # Writing to env with >> $GITHUB_ENV is an alternative
         # TODO deprecated set-output: https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
         run: echo "::set-output name=date::$(date +'%d.%m.%Y')"
-      - name: Set macos macos_python_path
-        id: date
-        # TODO use variable for Python version
-        run: echo "macos_python_path=/Library/Frameworks/Python.framework/Versions/3.11" >> $GITHUB_ENV
       - name: Get version number
         id: version
         # TODO deprecated set-output: https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
@@ -100,6 +96,9 @@ jobs:
           #   ASSET_MIME: application/vnd.microsoft.portable-executable
     steps:
       - uses: actions/checkout@v3
+      - name: Set macos macos_python_path
+        # TODO use variable for Python version
+        run: echo "macos_python_path=/Library/Frameworks/Python.framework/Versions/3.11" >> $GITHUB_ENV
       - name: Set up Python 3.11
         uses: actions/setup-python@v4
         with:
