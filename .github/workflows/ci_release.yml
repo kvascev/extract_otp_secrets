@@ -126,6 +126,10 @@ jobs:
       - name: Display structure of installed files
         run: ls -R . $macos_python_path
         if: runner.os == 'macOS'
+      - name: Display structure of installed files
+        run: dir C:\hostedtoolcache\windows\Python\3.11.1\
+        shell: cmd
+        if: runner.os == 'windows'
       - name: Build with pyinstaller for ${{ matrix.TARGET }}
         run: ${{matrix.CMD_BUILD}}
       - name: Display structure of generated files
