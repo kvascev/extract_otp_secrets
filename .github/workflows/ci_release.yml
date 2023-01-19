@@ -86,7 +86,7 @@ jobs:
             # TODO add --version-file
             # TODO add --manifest
             # TODO use UPX
-            CMD_BUILD: pyinstaller -y --add-data %pythonLocation%\__yolo_v3_qr_detector;__yolo_v3_qr_detector --onefile src/extract_otp_secrets.py
+            CMD_BUILD: pyinstaller -y --add-data "%pythonLocation%\__yolo_v3_qr_detector;__yolo_v3_qr_detector" --onefile src/extract_otp_secrets.py
             OUT_FILE_NAME: extract_otp_secrets.exe
             ASSET_NAME: extract_otp_secrets.exe (x64)
             ASSET_MIME: application/vnd.microsoft.portable-executable
