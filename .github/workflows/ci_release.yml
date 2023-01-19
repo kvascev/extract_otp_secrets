@@ -128,9 +128,11 @@ jobs:
         if: runner.os == 'macOS'
       - name: Display structure of installed files
         run: |
+          dir
           dir %pythonLocation%
           dir %pythonLocation%\DLLs
           dir %pythonLocation%\Lib
+          dir %pythonLocation%\Lib\site-packages
           dir %pythonLocation%\libs
           dir %pythonLocation%\Scripts
           dir %pythonLocation%\share
