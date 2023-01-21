@@ -237,15 +237,17 @@ def extract_otp_from_otp_url(otpauth_migration_url: str, otps: Otps, urls_count:
 
 def parse_args(sys_args: list[str]) -> Args:
     global verbose, quiet, colored
+
+    cmd = f"python {name}" if (name := os.path.basename(sys.argv[0])).endswith('.py') else f"{name}"
     description_text = "Extracts one time password (OTP) secrets from QR codes exported by two-factor authentication (2FA) apps"
     if qreader_available:
         description_text += "\nIf no infiles are provided, a GUI window starts and QR codes are captured from the camera."
-    example_text = """examples:
-python extract_otp_secrets.py
-python extract_otp_secrets.py example_*.txt
-python extract_otp_secrets.py - < example_export.txt
-python extract_otp_secrets.py --csv - example_*.png | tail -n+2
-python extract_otp_secrets.py = < example_export.png"""
+    example_text = f"""examples:
+{cmd}
+{cmd} example_*.txt
+{cmd} - < example_export.txt
+{cmd} --csv - example_*.png | tail -n+2
+{cmd} = < example_export.png"""
 
     arg_parser = argparse.ArgumentParser(formatter_class=lambda prog: argparse.RawTextHelpFormatter(prog, max_help_position=32),
                                          description=description_text,

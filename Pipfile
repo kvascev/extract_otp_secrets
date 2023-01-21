@@ -16,6 +16,7 @@ qreader = "<2.0.0"
 [dev-packages]
 build = "*"
 flake8 = "*"
+gfm-toc = "*"
 mypy = "*"
 mypy-protobuf = "*"
 pylint = "*"

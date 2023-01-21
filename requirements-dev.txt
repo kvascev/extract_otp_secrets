@@ -1,5 +1,6 @@
 build
 flake8
+gfm-toc
 mypy
 mypy-protobuf
 pyinstaller

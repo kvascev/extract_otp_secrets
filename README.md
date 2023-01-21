@@ -34,7 +34,7 @@ The secrets can be exported to JSON or CSV, or printed as QR codes to console or
 
     python src/extract_otp_secrets.py
 
-![CV2 Capture from camera screenshot](cv2_capture_screenshot.png)
+![CV2 Capture from camera screenshot](docs/cv2_capture_screenshot.png)
 
 Detected QR codes are surrounded with a frame. The color of the frame indicates the extracting result:
 
@@ -308,10 +308,16 @@ KeePass can be used as a backup for one time passwords (second factor) from the 
 
 ## Alternative installation methods
 
-### pip
+### pip using github
 
 ```
 pip install -U git+https://github.com/scito/extract_otp_secrets
+extract_otp_secrets
+```
+
+or run it
+
+```
 python -m extract_otp_secrets
 ```
 
@@ -319,7 +325,7 @@ or from a specific tag
 
 ```
 pip install -U git+https://github.com/scito/extract_otp_secrets.git@v2.0.0
-python -m extract_otp_secrets
+extract_otp_secrets
 curl -s https://raw.githubusercontent.com/scito/extract_otp_secrets/master/example_export.txt | python -m extract_otp_secrets -
 ```
 
@@ -328,6 +334,12 @@ curl -s https://raw.githubusercontent.com/scito/extract_otp_secrets/master/examp
 ```
 git clone https://github.com/scito/extract_otp_secrets.git
 pip install -U -e extract_otp_secrets
+extract_otp_secrets extract_otp_secrets/example_export.txt
+```
+
+or run it
+
+```
 python -m extract_otp_secrets extract_otp_secrets/example_export.txt
 ```
 
@@ -500,13 +512,13 @@ docker run --entrypoint /extract/run_pytest.sh --rm -v "$(pwd)":/files:ro extrac
 #### Alpine (only text file processing)
 
 ```bash
-docker build . -t extract_otp_secrets_only_txt --pull -f Dockerfile_only_txt --build-arg RUN_TESTS=false
+docker build . -t extract_otp_secrets:only_txt --pull -f Dockerfile_only_txt --build-arg RUN_TESTS=false
 ```
 
 Run tests in docker container:
 
 ```bash
-docker run --entrypoint /extract/run_pytest.sh --rm -v "$(pwd)":/files:ro extract_otp_secrets_only_txt tests/extract_otp_secrets_test.py -k "not qreader" --relaxed
+docker run --entrypoint /extract/run_pytest.sh --rm -v "$(pwd)":/files:ro extract_otp_secrets_only_txt extract_otp_secrets_test.py -k "not qreader" --relaxed
 ```
 
 ### Create executables by pyinstaller
