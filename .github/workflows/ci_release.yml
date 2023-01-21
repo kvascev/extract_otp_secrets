@@ -183,27 +183,38 @@ jobs:
           name: release_url
       - name: Display structure of downloaded files
         run: ls -R
-      - name: Get Release File Name & Upload URL
-        id: get_release_info
-        shell: bash
-        run: |
-          echo "upload_url=$(cat release_url.txt)" >> $GITHUB_OUTPUT
+      # - name: Get Release File Name & Upload URL
+      #   id: get_release_info
+      #   shell: bash
+      #   run: |
+      #     echo "upload_url=$(cat release_url.txt)" >> $GITHUB_OUTPUT
       # TODO create and upload hashes
       # - https://www.baeldung.com/linux/sha-256-from-command-line
       # - https://docs.github.com/en/actions/learn-github-actions/expressions#hashfiles
       # TODO make pre release built on push (not tag) von master
+      # - name: Upload Release Asset
+      #   id: upload-release-asset
+      #   # TODO only for tags
+      #   # TODO replace deprecated actions/upload-release-asset
+      #   uses: actions/upload-release-asset@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     upload_url: ${{ steps.get_release_info.outputs.upload_url }}
+      #     asset_path: ./dist/${{ matrix.OUT_FILE_NAME }}
+      #     asset_name: ${{ matrix.ASSET_NAME }}
+      #     asset_content_type: ${{ matrix.ASSET_MIME }}
       - name: Upload Release Asset
         id: upload-release-asset
         # TODO only for tags
-        # TODO replace deprecated actions/upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.get_release_info.outputs.upload_url }}
-          asset_path: ./dist/${{ matrix.OUT_FILE_NAME}}
-          asset_name: ${{ matrix.ASSET_NAME}}
-          asset_content_type: ${{ matrix.ASSET_MIME}}
+        run: |
+          response=$(curl \
+            -X POST \
+            -H "Accept: ${{ matrix.ASSET_MIME }}" \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"\
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            --data-binary @./dist/${{ matrix.OUT_FILE_NAME }} \
+            $(cat release_url.txt)?name=${{ matrix.ASSET_NAME }})
 
   # # https://stackoverflow.com/a/71295503/1663871
   # build:
