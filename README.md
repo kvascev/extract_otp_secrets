@@ -1,13 +1,18 @@
 # Extract TOTP/HOTP secrets from QR codes exported by two-factor authentication apps
 
 [![CI tests](https://github.com/scito/extract_otp_secrets/actions/workflows/ci.yml/badge.svg)](https://github.com/scito/extract_otp_secrets/actions/workflows/ci.yml)
-![coverage](https://img.shields.io/badge/coverage-94%25-brightgreen)
+![coverage](https://img.shields.io/badge/coverage-94%25-green)
 [![CI docker](https://github.com/scito/extract_otp_secrets/actions/workflows/ci_docker.yml/badge.svg)](https://github.com/scito/extract_otp_secrets/actions/workflows/ci_docker.yml)
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/protobuf)
+<!-- ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/protobuf)
 [![GitHub Pipenv locked Python version](https://img.shields.io/github/pipenv/locked/python-version/scito/extract_otp_secrets)](https://github.com/scito/extract_otp_secrets/blob/master/Pipfile.lock)
-![protobuf version](https://img.shields.io/badge/protobuf-4.21.12-informational)
+![protobuf version](https://img.shields.io/badge/protobuf-4.21.12-informational)-->
+![python versions](https://img.shields.io/badge/python-3.7%20%7C%203.8%20%7C%203.9%20%7C%203.10%20%7C%203.11-blue)
 [![License](https://img.shields.io/github/license/scito/extract_otp_secrets)](https://github.com/scito/extract_otp_secrets/blob/master/LICENSE)
 [![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/scito/extract_otp_secrets?sort=semver&label=version)](https://github.com/scito/extract_otp_secrets/tags)
+[![Linux](https://svgshare.com/i/Zhy.svg)](https://svgshare.com/i/Zhy.svg)
+[![Windows](https://svgshare.com/i/ZhY.svg)](https://svgshare.com/i/ZhY.svg)
+[![macOS](https://svgshare.com/i/ZjP.svg)](https://svgshare.com/i/ZjP.svg)
+<!-- [![Github all releases](https://img.shields.io/github/downloads/scito/extract_otp_secrets/total.svg)](https://GitHub.com/scito/extract_otp_secrets/releases/) -->
 [![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://stand-with-ukraine.pp.ua)
 
 ---
