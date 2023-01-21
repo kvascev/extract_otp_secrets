@@ -17,6 +17,8 @@ name: release
 # https://docs.github.com/en/actions/learn-github-actions/contexts
 # https://docs.github.com/en/actions/learn-github-actions/expressions
 
+# https://docs.github.com/en/rest/releases/releases
+
 # https://peps.python.org/pep-0440/
 # https://semver.org/
 
@@ -46,11 +48,13 @@ jobs:
         id: date
         # Writing to env with >> $GITHUB_ENV is an alternative
         # TODO deprecated set-output: https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
-        run: echo "::set-output name=date::$(date +'%d.%m.%Y')"
+        # run: echo "::set-output name=date::$(date +'%d.%m.%Y')"
+        run: echo "date=$(date +'%d.%m.%Y')" >> $GITHUB_OUTPUT
       - name: Get version number
         id: version
         # TODO deprecated set-output: https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
-        run: echo "::set-output name=version::${TAG_NAME/v/}"
+        # run: echo "::set-output name=version::${TAG_NAME/v/}"
+        run: echo "version=${TAG_NAME/v/}" >> $GITHUB_OUTPUT
         env:
           TAG_NAME: ${{ github.ref }}
       - name: Create Release
@@ -173,8 +177,9 @@ jobs:
         shell: bash
         # TODO deprecated set-output: https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
         run: |
-          value=$(cat release_url.txt)
-          echo ::set-output name=upload_url::$value
+          # value=$(cat release_url.txt)
+          # echo ::set-output name=upload_url::$value
+          echo "upload_url=$(cat release_url.txt)" >> $GITHUB_OUTPUT
       # TODO create and upload hashes
       # - https://www.baeldung.com/linux/sha-256-from-command-line
       # - https://docs.github.com/en/actions/learn-github-actions/expressions#hashfiles
