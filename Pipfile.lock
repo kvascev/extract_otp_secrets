@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "9b56c9708e464fbb035e36b29b0c89f0250bc50ac37234f3948a366136a8e6c9"
+            "sha256": "6df4f82f6d609b572dd2e4675541fb884e86c6cc7ffa9a40f47d138b2d71d955"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -317,6 +317,14 @@
             ],
             "index": "pypi",
             "version": "==6.0.0"
+        },
+        "gfm-toc": {
+            "hashes": [
+                "sha256:247af7267a6cbbdd4213f8383157997bcb07e39e819db737bd2dbfbdb94ee7ae",
+                "sha256:c53ed0e2cd400e89051377017ca98c11c9cef628b2effddf787db4fc19ff343d"
+            ],
+            "index": "pypi",
+            "version": "==0.0.7"
         },
         "iniconfig": {
             "hashes": [

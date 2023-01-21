@@ -549,6 +549,20 @@ def test_extract_help(capsys: pytest.CaptureFixture[str]) -> None:
     assert e.value.code == 0
 
 
+def test_extract_version(capsys: pytest.CaptureFixture[str]) -> None:
+    with pytest.raises(SystemExit) as e:
+        # Act
+        extract_otp_secrets.main(['--version'])
+
+    # Assert
+    captured = capsys.readouterr()
+
+    assert captured.out.startswith('extract_otp_secrets ')
+    assert captured.err == ''
+    assert e.type == SystemExit
+    assert e.value.code == 0
+
+
 def test_extract_no_arguments(capsys: pytest.CaptureFixture[str], mocker: MockerFixture) -> None:
     if qreader_available:
         # Arrange

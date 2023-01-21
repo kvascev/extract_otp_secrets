@@ -38,11 +38,18 @@ import csv
 import fileinput
 import json
 import os
+import platform
 import re
 import sys
 import urllib.parse as urlparse
 from enum import Enum, IntEnum
-from typing import Any, List, Optional, TextIO, Tuple, Union
+from typing import Any, List, Optional, Sequence, TextIO, Tuple, Union
+
+import colorama
+from pkg_resources import DistributionNotFound, get_distribution
+from qrcode import QRCode  # type: ignore
+
+import protobuf_generated_python.google_auth_pb2 as pb
 
 # workaround for PYTHON <= 3.7: compatibility
 if sys.version_info >= (3, 8):
@@ -50,16 +57,17 @@ if sys.version_info >= (3, 8):
 else:
     from typing_extensions import Final, TypedDict
 
-from qrcode import QRCode  # type: ignore
+# workaround for PYTHON <= 3.7: compatibility
+if sys.version_info >= (3, 8):
+    from importlib.metadata import PackageNotFoundError, version
+else:
+    from importlib_metadata import PackageNotFoundError, version
 
-import protobuf_generated_python.google_auth_pb2 as pb
-import colorama
 
 debug_mode = '-d' in sys.argv[1:] or '--debug' in sys.argv[1:]
 
 try:
     import cv2  # type: ignore # TODO use cv2 types if available
-
     import numpy as np  # TODO use numpy types if available
 
     try:
@@ -133,6 +141,8 @@ CAMERA: Final[str] = 'camera'
 verbose: IntEnum = LogLevel.NORMAL
 quiet: bool = False
 colored: bool = True
+executable: bool = False
+__version__: str
 
 
 def sys_main() -> None:
@@ -140,6 +150,7 @@ def sys_main() -> None:
 
 
 def main(sys_args: list[str]) -> None:
+    global executable
     # allow to use sys.stdout with with (avoid closing)
     sys.stdout.close = lambda: None  # type: ignore
     # set encoding to utf-8, needed for Windows
@@ -149,6 +160,9 @@ def main(sys_args: list[str]) -> None:
     except AttributeError:  # '_io.StringIO' object has no attribute 'reconfigure'
         # StringIO in tests do not have all attributes, ignore it
         pass
+
+    # https://pyinstaller.org/en/stable/runtime-information.html#run-time-information
+    executable = getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS')
 
     args = parse_args(sys_args)
 
@@ -264,6 +278,7 @@ b) image file containing a QR code or = for stdin for an image containing a QR c
         arg_parser.add_argument('--qr', '-Q', help=f'QR reader (default: {QRMode.ZBAR.name})', type=str, choices=[mode.name for mode in QRMode], default=QRMode.ZBAR.name)
     arg_parser.add_argument('-i', '--ignore', help='ignore duplicate otps', action='store_true')
     arg_parser.add_argument('--no-color', '-n', help='do not use ANSI colors in console output', action='store_true')
+    arg_parser.add_argument('--version', '-V', help='print version and quit', action=PrintVersionAction)
     output_group = arg_parser.add_mutually_exclusive_group()
     output_group.add_argument('-d', '--debug', help='enter debug mode, do checks and quit', action='count')
     output_group.add_argument('-v', '--verbose', help='verbose output', action='count')
@@ -731,6 +746,47 @@ def do_debug_checks() -> bool:
     import numpy as np  # noqa: F401 # This is only a debug import
     print(color('\nDebug checks passed', colorama.Fore.GREEN))
     return True
+
+
+class PrintVersionAction(argparse.Action):
+    def __init__(self, option_strings: Sequence[str], dest: str, nargs: int = 0, **kwargs: Any) -> None:
+        super().__init__(option_strings, dest, nargs, **kwargs)
+
+    def __call__(self, parser: argparse.ArgumentParser, namespace: Args, values: Union[str, Sequence[Any], None], option_string: Optional[str] = None) -> None:
+        print_version()
+        parser.exit()
+
+
+def print_version() -> None:
+    version = get_version()
+    print((
+        f"extract_otp_secrets {version} {platform.system()} {platform.machine()}"
+        f" Python {platform.python_version()} ({platform.python_implementation()})"
+        f"{' (standalone)' if executable else ''}{' (module)' if __package__ else ' (script)'}"
+    ))
+
+# https://setuptools-git-versioning.readthedocs.io/en/stable/runtime_version.html
+def get_version() -> str:
+    global __version__
+
+    try:
+        __version__ = version("extract_otp_secrets")
+        return __version__
+    except PackageNotFoundError:
+        # package is not installed
+        pass
+
+    # In some cases importlib cannot properly detect package version, for example it was compiled into executable file, so it uses some custom import mechanism.
+    # Instead, use pkg_resources which is included in setuptools (but has a significant runtime cost)
+
+    try:
+        __version__ = get_distribution("package-name").version
+        return __version__
+    except DistributionNotFound:
+        # package is not installed
+        pass
+
+    return ''
 
 
 # workaround for PYTHON <= 3.9 use: BaseException | None
