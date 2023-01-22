@@ -213,7 +213,8 @@ jobs:
         run: |
           response=$(curl \
             -X POST \
-            -H "Accept: ${{ matrix.ASSET_MIME }}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "Content-Type: ${{ matrix.ASSET_MIME }}" \
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"\
             -H "X-GitHub-Api-Version: 2022-11-28" \
             --silent \
