@@ -47,7 +47,7 @@ jobs:
       - name: Get current date
         id: date
         # Writing to env with >> $GITHUB_ENV is an alternative
-        run: echo "date=$(date +'%d.%m.%Y')" >> $GITHUB_OUTPUT
+        run: echo "date=$(TZ=Europe/Bern date +'%d.%m.%Y')" >> $GITHUB_OUTPUT
       - name: Get version number
         id: version
         env:
@@ -207,6 +207,7 @@ jobs:
       - name: Upload Release Asset
         id: upload-release-asset
         # TODO only for tags
+        shell: bash
         run: |
           response=$(curl \
             -X POST \
