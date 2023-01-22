@@ -759,10 +759,15 @@ class PrintVersionAction(argparse.Action):
 
 def print_version() -> None:
     version = get_version()
+    meta = [
+        platform.python_implementation()
+    ]
+    if executable: meta.append('exe')
+    meta.append(f"called as {'module' if __package__ else 'script'}")
     print((
         f"extract_otp_secrets {version} {platform.system()} {platform.machine()}"
-        f" Python {platform.python_version()} ({platform.python_implementation()})"
-        f"{' (standalone)' if executable else ''}{' (module)' if __package__ else ' (script)'}"
+        f" Python {platform.python_version()}"
+        f" ({'/'.join(meta)})"
     ))
 
 # https://setuptools-git-versioning.readthedocs.io/en/stable/runtime_version.html
