@@ -168,7 +168,8 @@ def main(sys_args: list[str]) -> None:
 
     if colored:
         colorama.just_fix_windows_console()
-
+    if verbose >= LogLevel.DEBUG:
+        print_version()
     if args.debug:
         sys.exit(0 if do_debug_checks() else 1)
 
@@ -252,7 +253,9 @@ def extract_otp_from_otp_url(otpauth_migration_url: str, otps: Otps, urls_count:
 def parse_args(sys_args: list[str]) -> Args:
     global verbose, quiet, colored
 
-    cmd = f"python {name}" if (name := os.path.basename(sys.argv[0])).endswith('.py') else f"{name}"
+    # For PYTHON <= 3.7: Use :=
+    name = os.path.basename(sys.argv[0])
+    cmd = f"python {name}" if name.endswith('.py') else f"{name}"
     description_text = "Extracts one time password (OTP) secrets from QR codes exported by two-factor authentication (2FA) apps"
     if qreader_available:
         description_text += "\nIf no infiles are provided, a GUI window starts and QR codes are captured from the camera."
