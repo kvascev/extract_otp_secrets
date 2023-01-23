@@ -162,7 +162,7 @@ if $clean; then
     if $interactive ; then askContinueYn "$cmd"; else echo -e "${cyan}$cmd${reset}";fi
     eval "$cmd"
 
-    cmd="rm -r dist/ build/ dist_*/ *.whl extracted_*.csv extracted_*.json pytest.xml pytest-coverage.txt .coverage tests/reports || true; find . -name '*.pyc' -type f -delete; find . -name '__pycache__' -type d -exec rm -r {} \; || true; find . -name '*.egg-info' -type d -exec rm -r {} \; || true; find . -name '*_cache' -type d -exec rm -r {} \; || true; mkdir -p tests/reports;"
+    cmd="sudo rm -rf dist/ build/ dist_*/ *.whl extracted_*.csv extracted_*.json pytest.xml pytest-coverage.txt .coverage tests/reports || true; find . -name '*.pyc' -type f -delete; find . -name '__pycache__' -type d -exec rm -r {} \; || true; find . -name '*.egg-info' -type d -exec rm -r {} \; || true; find . -name '*_cache' -type d -exec rm -r {} \; || true; mkdir -p tests/reports;"
     if $interactive ; then askContinueYn "$cmd"; else echo -e "${cyan}$cmd${reset}";fi
     eval "$cmd"
 
@@ -279,6 +279,15 @@ cmd="$MYPY --strict src/*.py tests/*.py | tee $TYPE_CHECK_OUT_FILE"
 if $interactive ; then askContinueYn "$cmd"; else echo -e "${cyan}$cmd${reset}";fi
 eval "$cmd"
 
+
+# Generate results files
+
+if $generate_result_files; then
+    cmd="for color in '' '-n'; do for level in '' '-v' '-vv' '-vvv'; do $PYTHON src/extract_otp_secrets.py example_export.txt \$color \$level > tests/data/print_verbose_output\$color\$level.txt; done; done"
+    if $interactive ; then askContinueYn "$cmd"; else echo -e "${cyan}$cmd${reset}";fi
+    eval "$cmd"
+fi
+
 # pip -e install
 
 cmd="$PIP install -U -e ."
@@ -346,14 +355,6 @@ eval "$cmd"
 cmd="dist/extract_otp_secrets -h"
 if $interactive ; then askContinueYn "$cmd"; else echo -e "${cyan}$cmd${reset}";fi
 eval "$cmd"
-
-# Generate results files
-
-if $generate_result_files; then
-    cmd="for color in '' '-n'; do for level in '' '-v' '-vv' '-vvv'; do $PYTHON src/extract_otp_secrets.py example_export.txt $color $level > tests/data/print_verbose_output$color$level.txt; done; done"
-    if $interactive ; then askContinueYn "$cmd"; else echo -e "${cyan}$cmd${reset}";fi
-    eval "$cmd"
-fi
 
 # Update Code Coverage in README.md
 

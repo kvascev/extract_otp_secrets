@@ -764,7 +764,7 @@ def print_version() -> None:
     print(get_full_version())
 
 
-def get_full_version() -> None:
+def get_full_version() -> str:
     version = get_raw_version()
     meta = [
         platform.python_implementation()
@@ -776,6 +776,7 @@ def get_full_version() -> None:
         f" Python {platform.python_version()}"
         f" ({'/'.join(meta)})"
     )
+
 
 # https://setuptools-git-versioning.readthedocs.io/en/stable/runtime_version.html
 def get_raw_version() -> str:
