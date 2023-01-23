@@ -509,7 +509,7 @@ def test_extract_verbose(verbose_level: str, color: str, capsys: pytest.CaptureF
 
 
 def normalize_verbose_text(text: str, relaxed: bool) -> str:
-    normalized = re.sub('^.+ version: .+$', '', text, flags=re.MULTILINE | re.IGNORECASE)
+    normalized = re.sub('^.*version: .+$', '', text, flags=re.MULTILINE | re.IGNORECASE)
     if not qreader_available:
         normalized = normalized \
             .replace('QReader installed: True', 'QReader installed: False') \
