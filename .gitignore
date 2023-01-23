@@ -20,4 +20,5 @@ dist/
 pytest-coverage.txt
 tests/reports/
 dist_*/
-extract_otp_secrets.spec
+*.spec
+

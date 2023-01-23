@@ -428,11 +428,11 @@ if $build_docker; then
     BULLSEYE_GLIBC_VERSION=$(docker run --entrypoint /bin/bash --rm extract_otp_secrets -c 'ldd --version | sed "1!d" | sed -E "s/.* ([[:digit:]]+\.[[:digit:]]+)$/\1/"')
     echo "Bullseye glibc: $BULLSEYE_GLIBC_VERSION"
 
-    cmd="docker run --entrypoint /bin/bash --rm -v \"$(pwd)\":/files extract_otp_secrets -c 'apt-get update && apt-get -y install binutils && pip install -U -r /files/requirements.txt && pip install pyinstaller && pyinstaller -y --add-data /usr/local/__yolo_v3_qr_detector/:__yolo_v3_qr_detector/ --onefile --distpath /files/dist_bullseye/ /files/src/extract_otp_secrets.py'"
+    cmd="docker run --entrypoint /bin/bash --rm -v \"$(pwd)\":/files -w /files extract_otp_secrets -c 'apt-get update && apt-get -y install binutils && pip install -U -r /files/requirements.txt && pip install pyinstaller && pyinstaller -y --add-data /usr/local/__yolo_v3_qr_detector/:__yolo_v3_qr_detector/ --onefile --name extract_otp_secrets_linux_x86_64_bullseye --distpath /files/dist/ /files/src/extract_otp_secrets.py'"
     if $interactive ; then askContinueYn "$cmd"; else echo -e "${cyan}$cmd${reset}";fi
     eval "$cmd"
 
-    cmd="dist_bullseye/extract_otp_secrets -h"
+    cmd="dist/extract_otp_secrets_linux_x86_64_bullseye -h"
     if $interactive ; then askContinueYn "$cmd"; else echo -e "${cyan}$cmd${reset}";fi
     eval "$cmd"
 
@@ -440,11 +440,11 @@ if $build_docker; then
     BUSTER_GLIBC_VERSION=$(docker run --entrypoint /bin/bash --rm extract_otp_secrets:buster -c 'ldd --version | sed "1!d" | sed -E "s/.* ([[:digit:]]+\.[[:digit:]]+)$/\1/"')
     echo "Bullseye glibc: $BUSTER_GLIBC_VERSION"
 
-    cmd="docker run --entrypoint /bin/bash --rm -v \"$(pwd)\":/files extract_otp_secrets:buster -c 'apt-get update && apt-get -y install binutils && pip install -U -r /files/requirements.txt && pip install pyinstaller && pyinstaller -y --add-data /usr/local/__yolo_v3_qr_detector/:__yolo_v3_qr_detector/ --onefile --distpath /files/dist_buster/ /files/src/extract_otp_secrets.py'"
+    cmd="docker run --entrypoint /bin/bash --rm -v \"$(pwd)\":/files -w /files extract_otp_secrets:buster -c 'apt-get update && apt-get -y install binutils && pip install -U -r /files/requirements.txt && pip install pyinstaller && pyinstaller -y --add-data /usr/local/__yolo_v3_qr_detector/:__yolo_v3_qr_detector/ --onefile --name extract_otp_secrets_linux_x86_64 --distpath /files/dist/ /files/src/extract_otp_secrets.py'"
     if $interactive ; then askContinueYn "$cmd"; else echo -e "${cyan}$cmd${reset}";fi
     eval "$cmd"
 
-    cmd="dist_buster/extract_otp_secrets -h"
+    cmd="dist/extract_otp_secrets_linux_x86_64 -h"
     if $interactive ; then askContinueYn "$cmd"; else echo -e "${cyan}$cmd${reset}";fi
     eval "$cmd"
 
