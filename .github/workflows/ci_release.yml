@@ -130,7 +130,7 @@ jobs:
           file: Dockerfile
           # builder: ${{ steps.buildx.outputs.name }}
           build-args: |
-            BASE_IMAGE=3.11-slim-buster
+            BASE_IMAGE=python:3.11-slim-buster
           # Note: tags has to be all lower-case
           pull: true
           tags: |
