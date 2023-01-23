@@ -22,3 +22,6 @@ tests/reports/
 dist_*/
 *.spec
 
+file_version_info_python.txt
+file_version_info_explorer.txt
+file_version_info.txt

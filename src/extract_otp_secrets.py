@@ -169,7 +169,7 @@ def main(sys_args: list[str]) -> None:
     if colored:
         colorama.just_fix_windows_console()
     if verbose >= LogLevel.DEBUG:
-        print_version()
+        print(f"Version: {get_full_version()}\n")
     if args.debug:
         sys.exit(0 if do_debug_checks() else 1)
 
@@ -761,20 +761,24 @@ class PrintVersionAction(argparse.Action):
 
 
 def print_version() -> None:
-    version = get_version()
+    print(get_full_version())
+
+
+def get_full_version() -> None:
+    version = get_raw_version()
     meta = [
         platform.python_implementation()
     ]
     if executable: meta.append('exe')
-    meta.append(f"called as {'module' if __package__ else 'script'}")
-    print((
+    meta.append(f"called as {'package' if __package__ else 'script'}")
+    return (
         f"extract_otp_secrets {version} {platform.system()} {platform.machine()}"
         f" Python {platform.python_version()}"
         f" ({'/'.join(meta)})"
-    ))
+    )
 
 # https://setuptools-git-versioning.readthedocs.io/en/stable/runtime_version.html
-def get_version() -> str:
+def get_raw_version() -> str:
     global __version__
 
     try:

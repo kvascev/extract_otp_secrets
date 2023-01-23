@@ -189,7 +189,7 @@ jobs:
         include:
           - os: ubuntu-latest
             TARGET: linux
-            CMD_BUILD: >
+            CMD_BUILD: |
                 pyinstaller -y --add-data $pythonLocation/__yolo_v3_qr_detector/:__yolo_v3_qr_detector/ --onefile src/extract_otp_secrets.py
             OUT_FILE_NAME: extract_otp_secrets
             ASSET_NAME: extract_otp_secrets_linux_x86_64_ubuntu_latest
@@ -203,12 +203,8 @@ jobs:
             # TODO add --osx-entitlements-file
             # TODO https://pyinstaller.org/en/stable/spec-files.html#spec-file-options-for-a-macos-bundle
             # TODO --target-arch universal2
-            CMD_BUILD: >
-              pyinstaller -y --add-data $macos_python_path/__yolo_v3_qr_detector/:__yolo_v3_qr_detector/ --onefile --argv-emulation src/extract_otp_secrets.py &&
-              ls -R
-              #  &&
-              # cd dist/ &&
-              # zip -r9 extract_otp_secrets extract_otp_secrets.app/
+            CMD_BUILD: |
+              pyinstaller -y --add-data $macos_python_path/__yolo_v3_qr_detector/:__yolo_v3_qr_detector/ --onefile --argv-emulation src/extract_otp_secrets.py
             OUT_FILE_NAME: extract_otp_secrets
             ASSET_NAME: extract_otp_secrets_macos_x86_64
             ASSET_MIME: application/x-newton-compatible-pkg
@@ -216,10 +212,10 @@ jobs:
           - os: windows-latest
             TARGET: windows
             # TODO add --icon
-            # TODO add --version-file
             # TODO add --manifest
             # TODO find more elegant solution for pyzbar\libiconv.dll and pyzbar\libzbar-64.dll
-            CMD_BUILD: pyinstaller -y --add-data "$($Env:pythonLocation)\__yolo_v3_qr_detector;__yolo_v3_qr_detector" --add-binary "$($Env:pythonLocation)\Lib\site-packages\pyzbar\libiconv.dll;pyzbar" --add-binary "$($Env:pythonLocation)\Lib\site-packages\pyzbar\libzbar-64.dll;pyzbar" --onefile src/extract_otp_secrets.py
+            CMD_BUILD: |
+              pyinstaller -y --add-data "$($Env:pythonLocation)\__yolo_v3_qr_detector;__yolo_v3_qr_detector" --add-binary "$($Env:pythonLocation)\Lib\site-packages\pyzbar\libiconv.dll;pyzbar" --add-binary "$($Env:pythonLocation)\Lib\site-packages\pyzbar\libzbar-64.dll;pyzbar" --onefile --version-file build/file_version_info.txt src/extract_otp_secrets.py
             OUT_FILE_NAME: extract_otp_secrets.exe
             ASSET_NAME: extract_otp_secrets_win_x86_64.exe
             ASSET_MIME: application/vnd.microsoft.portable-executable
@@ -248,6 +244,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -U -r requirements-dev.txt
           pip install -U .
+      - name: Create Windows file_version_info.txt
+        shell: bash
+        run: |
+              mkdir -p build/
+              VERSION_STR=$(setuptools-git-versioning) VERSION_MAJOR=$(cut -d '.' -f 1 <<< "$(setuptools-git-versioning)") VERSION_MINOR=$(cut -d '.' -f 2 <<< "$(setuptools-git-versioning)") VERSION_PATCH=$(cut -d '.' -f 3 <<< "$(setuptools-git-versioning)") VERSION_BUILD=$(($(git rev-list --count $(git tag | sort -V -r | sed '1!d')..HEAD))) YEARS='2020-2023' envsubst < file_version_info_template.txt > build/file_version_info.txt
       - name: Build with pyinstaller for ${{ matrix.TARGET }}
         run: ${{ matrix.CMD_BUILD }}
       - name: Check generated exe

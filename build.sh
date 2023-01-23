@@ -425,6 +425,7 @@ if $build_docker; then
     eval "$cmd"
 
     # Build executable from Docker latest
+    # sed "1!d" is workaround for head -n 1 since it head procduces exit code != 0
     BULLSEYE_GLIBC_VERSION=$(docker run --entrypoint /bin/bash --rm extract_otp_secrets -c 'ldd --version | sed "1!d" | sed -E "s/.* ([[:digit:]]+\.[[:digit:]]+)$/\1/"')
     echo "Bullseye glibc: $BULLSEYE_GLIBC_VERSION"
 
@@ -445,6 +446,11 @@ if $build_docker; then
     eval "$cmd"
 
     cmd="dist/extract_otp_secrets_linux_x86_64 -h"
+    if $interactive ; then askContinueYn "$cmd"; else echo -e "${cyan}$cmd${reset}";fi
+    eval "$cmd"
+
+    # create Windows file_version_info.txt
+    cmd="VERSION_STR=$(setuptools-git-versioning) VERSION_MAJOR=$(cut -d '.' -f 1 <<< "$(setuptools-git-versioning)") VERSION_MINOR=$(cut -d '.' -f 2 <<< "$(setuptools-git-versioning)") VERSION_PATCH=$(cut -d '.' -f 3 <<< "$(setuptools-git-versioning)") VERSION_BUILD=$(($(git rev-list --count $(git tag | sort -V -r | sed '1!d')..HEAD))) YEARS='2020-2023' envsubst < file_version_info_template.txt > build/file_version_info.txt"
     if $interactive ; then askContinueYn "$cmd"; else echo -e "${cyan}$cmd${reset}";fi
     eval "$cmd"
 

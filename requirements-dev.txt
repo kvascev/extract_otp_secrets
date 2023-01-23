@@ -9,5 +9,6 @@ pytest
 pytest-cov
 pytest-mock
 setuptools
+setuptools-git-versioning
 types-protobuf
 wheel
