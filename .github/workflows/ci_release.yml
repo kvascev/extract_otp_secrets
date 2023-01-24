@@ -262,7 +262,7 @@ jobs:
       - name: Upload Release Asset
         id: upload-release-asset
         # TODO only for tags
-        if: ${{ matrix.UPLOAD }} == 'true'
+        if: ${{ matrix.UPLOAD == 'true' }}
         shell: bash
         run: |
           response=$(curl \
