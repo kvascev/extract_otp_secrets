@@ -11,6 +11,8 @@ name: docker
 on:
   # run it on push to the default repository branch
   push:
+    paths-ignore:
+      - 'docs/**'
   schedule:
     # Run weekly on default branch
     - cron: '47 3 * * 6'

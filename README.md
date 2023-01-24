@@ -30,6 +30,62 @@ The secrets can be exported to JSON or CSV, or printed as QR codes to console or
 
 ⚡ **This project/script was renamed from `extract_otp_secret_keys` to `extract_otp_secrets`.** ⚡
 
+<details>
+<summary>Table of contents</summary>
+
+## Table of contents
+
+- [Usage](#usage)
+  - [Capture QR codes from camera (🆕 since version 2.0)](#capture-qr-codes-from-camera--since-version-20)
+  - [With builtin QR decoder from image files (🆕 since version 2.0)](#with-builtin-qr-decoder-from-image-files--since-version-20)
+  - [With external QR decoder app from text files](#with-external-qr-decoder-app-from-text-files)
+- [Installation](#installation)
+  - [Download binary executable (🆕 since v2.1)](#download-binary-executable--since-v21)
+  - [Run as script (recommend for developers or advanced users)](#run-as-script-recommend-for-developers-or-advanced-users)
+  - [Installation of shared system libraries](#installation-of-shared-system-libraries)
+- [Program help: arguments and options](#program-help-arguments-and-options)
+- [Examples](#examples)
+  - [Printing otp secrets form text file](#printing-otp-secrets-form-text-file)
+  - [Printing otp secrets from image file](#printing-otp-secrets-from-image-file)
+  - [Writing otp secrets to csv file](#writing-otp-secrets-to-csv-file)
+  - [Writing otp secrets to json file](#writing-otp-secrets-to-json-file)
+  - [Printing otp secrets multiple files](#printing-otp-secrets-multiple-files)
+  - [Printing otp secrets from stdin (text)](#printing-otp-secrets-from-stdin-text)
+  - [Printing otp secrets from stdin (image)](#printing-otp-secrets-from-stdin-image)
+  - [Printing otp secrets csv to stdout](#printing-otp-secrets-csv-to-stdout)
+  - [Printing otp secrets csv to stdout without header line](#printing-otp-secrets-csv-to-stdout-without-header-line)
+  - [Reading from stdin and printing to stdout](#reading-from-stdin-and-printing-to-stdout)
+- [Features](#features)
+- [KeePass](#keepass)
+- [How to export otp secrets from Google Authenticator app](#how-to-export-otp-secrets-from-google-authenticator-app)
+- [Glossary](#glossary)
+- [Alternative installation methods](#alternative-installation-methods)
+  - [pip using github](#pip-using-github)
+  - [local pip](#local-pip)
+  - [pipenv](#pipenv)
+  - [Visual Studio Code Remote - Containers / VSCode devcontainer](#visual-studio-code-remote---containers--vscode-devcontainer)
+  - [venv](#venv)
+  - [devbox](#devbox)
+  - [docker](#docker)
+  - [More docker examples](#more-docker-examples)
+- [Tests](#tests)
+  - [PyTest](#pytest)
+  - [unittest](#unittest)
+  - [VSCode Setup](#vscode-setup)
+- [Development](#development)
+  - [Build](#build)
+  - [Upgrade pip Packages](#upgrade-pip-packages)
+  - [Build docker images](#build-docker-images)
+  - [Create executables with pyinstaller](#create-executables-with-pyinstaller)
+  - [Full local build (bash)](#full-local-build-bash)
+- [Technical background](#technical-background)
+- [References](#references)
+- [Issues](#issues)
+- [Problems and Troubleshooting](#problems-and-troubleshooting)
+  - [Windows error message](#windows-error-message)
+- [Related projects](#related-projects)
+</details>
+
 ## Usage
 
 ### Capture QR codes from camera (🆕 since version 2.0)
@@ -38,12 +94,13 @@ The secrets can be exported to JSON or CSV, or printed as QR codes to console or
 2. Export the QR codes from "Google Authenticator" app (see [how to export](#how-to-export-otp-secrets-from-google-authenticator-app))
 3. Point the exported QR codes to the camera of your computer
 4. Run the program without infile parameters:
-
-    extract_otp_secrets
-
+```
+extract_otp_secrets
+```
 or
-
-    python src/extract_otp_secrets.py
+```
+python src/extract_otp_secrets.py
+```
 
 ![CV2 Capture from camera screenshot](docs/cv2_capture_screenshot.png)
 
@@ -59,13 +116,13 @@ The secrets are printed by default to the console. [Set program parameters](#pro
 
 1. Open "Google Authenticator" app on the mobile phone
 2. Export the QR codes from "Google Authenticator" app (see [how to export](#how-to-export-otp-secrets-from-google-authenticator-app))
-4. Save the QR code as image file, e.g. example_export.png
-5. Transfer the images files to the computer where his script is installed.
-6. Call this script with the file as input:
-
-    python src/extract_otp_secrets.py example_export.png
-
-7. Remove unencrypted files with secrets from your computer and mobile.
+3. Save the QR code as image file, e.g. example_export.png
+4. Transfer the images files to the computer where his script is installed.
+5. Call this script with the file as input:
+```
+python src/extract_otp_secrets.py example_export.png
+```
+6. Remove unencrypted files with secrets from your computer and mobile.
 
 ### With external QR decoder app from text files
 
@@ -75,19 +132,21 @@ The secrets are printed by default to the console. [Set program parameters](#pro
 4. Save the captured QR codes from the QR code reader to a text file, e.g. example_export.txt. Save each QR code on a new line. (The captured QR codes look like `otpauth-migration://offline?data=…`)
 5. Transfer the file to the computer where his script is installed.
 6. Call this script with the file as input:
-
-    python src/extract_otp_secrets.py example_export.txt
-
+```
+python src/extract_otp_secrets.py example_export.txt
+```
 7. Remove unencrypted files with secrets from your computer and mobile.
 
 ## Installation
 
-### Download binary executable
+### Download binary executable (🆕 since v2.1)
 
-1. Download executable for your platform from [latest release](https://github.com/scito/extract_otp_secrets/releases/latest)
-2. Start executable
+1. Download executable for your platform from [latest release](https://github.com/scito/extract_otp_secrets/releases/latest), see assets
+2. Start executable by clicking or from command line
 
-✅ Neither Python nor dependencies have to be installed.
+✅ Everything is just packed in one executable.
+✅ No installation needed, neither Python nor dependencies have to be installed.
+✅ Easy and convenient
 
 ### Run as script (recommend for developers or advanced users)
 

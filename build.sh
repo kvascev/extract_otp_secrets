@@ -356,6 +356,12 @@ cmd="dist/extract_otp_secrets -h"
 if $interactive ; then askContinueYn "$cmd"; else echo -e "${cyan}$cmd${reset}";fi
 eval "$cmd"
 
+# Generate README.md TOC
+
+cmd="gfm-toc -s 2 -e 3 -t -o README.md > docs/README_TOC.md"
+if $interactive ; then askContinueYn "$cmd"; else echo -e "${cyan}$cmd${reset}";fi
+eval "$cmd"
+
 # Update Code Coverage in README.md
 
 # https://github.com/marketplace/actions/pytest-coverage-comment
