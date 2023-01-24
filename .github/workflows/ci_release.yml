@@ -134,7 +134,6 @@ jobs:
           # Note: tags has to be all lower-case
           pull: true
           tags: |
-            extract_otp_secrets:buster
             scit0/extract_otp_secrets:buster
             ghcr.io/scito/extract_otp_secrets:buster
           # build on feature branches, push only on master branch
@@ -216,7 +215,7 @@ jobs:
             # TODO add --manifest
             # TODO find more elegant solution for pyzbar\libiconv.dll and pyzbar\libzbar-64.dll
             CMD_BUILD: |
-              pyinstaller -y --add-data "$($Env:pythonLocation)\__yolo_v3_qr_detector;__yolo_v3_qr_detector" --add-binary "$($Env:pythonLocation)\Lib\site-packages\pyzbar\libiconv.dll;pyzbar" --add-binary "$($Env:pythonLocation)\Lib\site-packages\pyzbar\libzbar-64.dll;pyzbar" --onefile --version-file build/file_version_info.txt src/extract_otp_secrets.py
+              pyinstaller -y --add-data "$($Env:pythonLocation)\__yolo_v3_qr_detector;__yolo_v3_qr_detector" --add-binary "$($Env:pythonLocation)\Lib\site-packages\pyzbar\libiconv.dll;pyzbar" --add-binary "$($Env:pythonLocation)\Lib\site-packages\pyzbar\libzbar-64.dll;pyzbar" --onefile --version-file build\file_version_info.txt src\extract_otp_secrets.py
             OUT_FILE_NAME: extract_otp_secrets.exe
             ASSET_NAME: extract_otp_secrets_win_x86_64.exe
             ASSET_MIME: application/vnd.microsoft.portable-executable
