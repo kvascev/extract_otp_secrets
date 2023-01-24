@@ -1,10 +1,10 @@
 name: release
 
 # https://data-dive.com/multi-os-deployment-in-cloud-using-pyinstaller-and-github-actions
-# https://github.com/actions/create-release
+# https://github.com/actions/create-release (archived)
 # https://github.com/actions/upload-artifact
 # https://github.com/actions/download-artifact
-# https://github.com/actions/upload-release-asset
+# https://github.com/actions/upload-release-asset (archived)
 # https://github.com/docker/metadata-action
 # https://github.com/marketplace/actions/generate-release-hashes
 
@@ -70,8 +70,6 @@ jobs:
             -d '{"tag_name":"${{ github.ref }}","target_commitish":"master","name":"${{ steps.version.outputs.version }} - ${{ steps.date.outputs.date }}","body":"Description of the release","draft":true,"prerelease":false,"generate_release_notes":true}')
           echo upload_url=$(jq '.upload_url' <<< "$response") >> $GITHUB_OUTPUT
           echo $(jq -r '.upload_url' <<< "$response") > release_url.txt
-      # - name: Output Release URL File
-      #   run: echo "${{ steps.create_release.outputs.upload_url }}" > release_url.txt
       - name: Save Release URL File for publish
         uses: actions/upload-artifact@v3
         with:
@@ -79,7 +77,7 @@ jobs:
           path: release_url.txt
 
   build-and-push-docker-image:
-    name: Build linux release in docker container
+    name: Build Linux release in docker container
     # run only when code is compiling and tests are passing
     runs-on: ubuntu-latest
     needs: create-release
@@ -154,7 +152,7 @@ jobs:
       - name: Run Pyinstaller in container
         run: |
           # TODO use local docker image https://stackoverflow.com/a/61155718/1663871
-          docker run --entrypoint /bin/bash --rm -v "$(pwd)":/files -w /files ghcr.io/extract_otp_secrets:buster -c 'apt-get update && apt-get -y install binutils && pip install -U -r /files/requirements.txt && pip install pyinstaller && pyinstaller -y --add-data /usr/local/__yolo_v3_qr_detector/:__yolo_v3_qr_detector/ --onefile --name extract_otp_secrets_linux_x86_64 --distpath /files/dist/ /files/src/extract_otp_secrets.py'
+          docker run --pull always --entrypoint /bin/bash --rm -v "$(pwd)":/files -w /files ghcr.io/scito/extract_otp_secrets:buster -c 'apt-get update && apt-get -y install binutils && pip install -U -r /files/requirements.txt && pip install pyinstaller && pyinstaller -y --add-data /usr/local/__yolo_v3_qr_detector/:__yolo_v3_qr_detector/ --onefile --name extract_otp_secrets_linux_x86_64 --distpath /files/dist/ /files/src/extract_otp_secrets.py'
           dist_buster/extract_otp_secrets -h
 
       - name: Load Release URL File from release job
