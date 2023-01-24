@@ -58,7 +58,7 @@ jobs:
 
       - name: "qr_reader: Build image and push to Docker Hub and GitHub Container Registry"
         id: docker_build_qr_reader_latest
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           platforms: linux/amd64,linux/arm64
           # relative path to the place where source code with Dockerfile is located
@@ -123,7 +123,7 @@ jobs:
 
       - name: "only_txt: Build image and push to Docker Hub and GitHub Container Registry"
         id: docker_build_only_txt
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           # relative path to the place where source code with Dockerfile is located
           platforms: linux/amd64,linux/arm64
