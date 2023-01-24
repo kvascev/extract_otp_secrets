@@ -56,7 +56,7 @@ jobs:
         id: create_release
         env:
           DATE: ${{ steps.date.outputs.date }}
-          TAG_MESSAGE: ${{ git tag -l --format='%(contents:subject)' ${{ github.ref_name }} }}
+          TAG_MESSAGE: $(git tag -l --format='%(contents:subject)' ${{ github.ref_name }})
         run: |
           # https://docs.github.com/en/rest/releases/releases?apiVersion=2022-11-28#create-a-release
           response=$(curl \

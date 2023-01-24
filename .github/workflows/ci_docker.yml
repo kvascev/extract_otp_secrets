@@ -13,6 +13,8 @@ on:
   push:
     paths-ignore:
       - 'docs/**'
+    tags-ignore:
+      - '**'
   schedule:
     # Run weekly on default branch
     - cron: '47 3 * * 6'
