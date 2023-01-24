@@ -29,7 +29,8 @@ VSVersionInfo(
     StringFileInfo(
       [
       StringTable(
-        '000004b0',
+        # 0x0409 (U.S. English) + 04B0 (1200 = Unicode), https://learn.microsoft.com/en-us/windows/win32/menurc/stringfileinfo-block
+        '040904B0',
         [StringStruct('CompanyName', 'scito'),
         StringStruct('FileDescription', 'extract_otp_secrets'),
         StringStruct('FileVersion', '$VERSION_STR'),
@@ -39,6 +40,7 @@ VSVersionInfo(
         StringStruct('ProductName', 'extract_otp_secrets'),
         StringStruct('ProductVersion', '$VERSION_STR')])
       ]),
+    # 1033 (0x0409 = U.S. English), 1200 (Unicode)
     VarFileInfo([VarStruct('Translation', [0, 1200])])
   ]
 )
