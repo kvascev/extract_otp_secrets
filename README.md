@@ -1,18 +1,20 @@
 # Extract TOTP/HOTP secrets from QR codes exported by two-factor authentication apps
 
 [![CI tests](https://github.com/scito/extract_otp_secrets/actions/workflows/ci.yml/badge.svg)](https://github.com/scito/extract_otp_secrets/actions/workflows/ci.yml)
-![coverage](https://img.shields.io/badge/coverage-94%25-green)
 [![CI docker](https://github.com/scito/extract_otp_secrets/actions/workflows/ci_docker.yml/badge.svg)](https://github.com/scito/extract_otp_secrets/actions/workflows/ci_docker.yml)
+![coverage](https://img.shields.io/badge/coverage-94%25-brightgreen)
 <!-- ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/protobuf)
 [![GitHub Pipenv locked Python version](https://img.shields.io/github/pipenv/locked/python-version/scito/extract_otp_secrets)](https://github.com/scito/extract_otp_secrets/blob/master/Pipfile.lock)
 ![protobuf version](https://img.shields.io/badge/protobuf-4.21.12-informational)-->
 ![python versions](https://img.shields.io/badge/python-3.7%20%7C%203.8%20%7C%203.9%20%7C%203.10%20%7C%203.11-blue)
 [![License](https://img.shields.io/github/license/scito/extract_otp_secrets)](https://github.com/scito/extract_otp_secrets/blob/master/LICENSE)
-[![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/scito/extract_otp_secrets?sort=semver&label=version)](https://github.com/scito/extract_otp_secrets/tags)
-[![Linux](https://svgshare.com/i/Zhy.svg)](https://svgshare.com/i/Zhy.svg)
-[![Windows](https://svgshare.com/i/ZhY.svg)](https://svgshare.com/i/ZhY.svg)
-[![macOS](https://svgshare.com/i/ZjP.svg)](https://svgshare.com/i/ZjP.svg)
-<!-- [![Github all releases](https://img.shields.io/github/downloads/scito/extract_otp_secrets/total.svg)](https://GitHub.com/scito/extract_otp_secrets/releases/) -->
+[![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/scito/extract_otp_secrets?sort=semver)](https://github.com/scito/extract_otp_secrets/releases/latest)  
+[![Download executable](https://img.shields.io/badge/download-exe-blue)](https://github.com/scito/extract_otp_secrets/releases/latest)
+[![Linux](https://img.shields.io/badge/os-linux-yellow)](https://github.com/scito/extract_otp_secrets/releases/latest)
+[![Windows](https://img.shields.io/badge/os-windows-yellow)](https://github.com/scito/extract_otp_secrets/releases/latest)
+[![MacOS](https://img.shields.io/badge/os-macos-yellow)](https://github.com/scito/extract_otp_secrets/releases/latest)
+[![Docker image](https://img.shields.io/badge/docker-image-blue)](https://hub.docker.com/repository/docker/scit0/extract_otp_secrets/general)
+<!-- [![Github all releases](https://img.shields.io/github/downloads/scito/extract_otp_secrets/total.svg)](https://GitHub.com/scito/extract_otp_secrets/releases/) -->  
 [![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://stand-with-ukraine.pp.ua)
 
 ---
@@ -35,7 +37,11 @@ The secrets can be exported to JSON or CSV, or printed as QR codes to console or
 1. Open "Google Authenticator" app on the mobile phone
 2. Export the QR codes from "Google Authenticator" app (see [how to export](#how-to-export-otp-secrets-from-google-authenticator-app))
 3. Point the exported QR codes to the camera of your computer
-4. Call this script without infile parameters:
+4. Run the program without infile parameters:
+
+    extract_otp_secrets
+
+or
 
     python src/extract_otp_secrets.py
 
@@ -76,7 +82,16 @@ The secrets are printed by default to the console. [Set program parameters](#pro
 
 ## Installation
 
-```
+### Download binary executable
+
+1. Download executable for your platform from [latest release](https://github.com/scito/extract_otp_secrets/releases/latest)
+2. Start executable
+
+✅ Neither Python nor dependencies have to be installed.
+
+### Run as script (recommend for developers or advanced users)
+
+```bash
 git clone https://github.com/scito/extract_otp_secrets.git
 cd extract_otp_secrets
 pip install -U -r requirements.txt
@@ -125,7 +140,7 @@ OpenCV requires [Visual C++ redistributable 2015](https://www.microsoft.com/en-u
 
 ## Program help: arguments and options
 
-<pre>usage: extract_otp_secrets.py [-h] [--csv FILE] [--keepass FILE] [--json FILE] [--printqr] [--saveqr DIR] [--camera NUMBER] [--qr {ZBAR,QREADER,QREADER_DEEP,CV2,CV2_WECHAT}] [-i] [--no-color] [-d | -v | -q] [infile ...]
+<pre>usage: extract_otp_secrets.py [-h] [--csv FILE] [--keepass FILE] [--json FILE] [--printqr] [--saveqr DIR] [--camera NUMBER] [--qr {ZBAR,QREADER,QREADER_DEEP,CV2,CV2_WECHAT}] [-i] [--no-color] [--version] [-d | -v | -q] [infile ...]
 
 Extracts one time password (OTP) secrets from QR codes exported by two-factor authentication (2FA) apps
 If no infiles are provided, a GUI window starts and QR codes are captured from the camera.
@@ -146,6 +161,7 @@ options:
                                 QR reader (default: ZBAR)
   -i, --ignore                  ignore duplicate otps
   --no-color, -n                do not use ANSI colors in console output
+  --version, -V                 print version and quit
   -d, --debug                   enter debug mode, do checks and quit
   -v, --verbose                 verbose output
   -q, --quiet                   no stdout output, except output set by -
@@ -231,6 +247,11 @@ python extract_otp_secrets.py = < example_export.png</pre>
     * Portable image format - *.pbm, *.pgm, *.ppm *.pxm, *.pnm
 * Prints errors and warnings to stderr (🆕 since v2.0)
 * Prints colored output (🆕 since v2.0)
+* Startable as executable (script, Python, and all dependencies packed in one executable) (🆕 since v2.1)
+    * extract_otp_secrets_linux_x86_64 (>= glibc 2.28)
+    * extract_otp_secrets_win_x86_64.exe
+    * extract_otp_secrets_macos_x86_64 (untested)
+* Prebuilt Docker images provided for amd64 and arm64 (🆕 since v2.0)
 * Many ways to run the script:
     * Native Python
     * pipenv
@@ -239,7 +260,6 @@ python extract_otp_secrets.py = < example_export.png</pre>
     * Docker
     * VSCode devcontainer
     * devbox
-* Prebuilt Docker images provided for amd64 and arm64 (🆕 since v2.0)
 * Compatible with major platforms:
     * Linux
     * macOS
@@ -526,7 +546,7 @@ Run tests in docker container:
 docker run --entrypoint /extract/run_pytest.sh --rm -v "$(pwd)":/files:ro extract_otp_secrets_only_txt extract_otp_secrets_test.py -k "not qreader" --relaxed
 ```
 
-### Create executables by pyinstaller
+### Create executables with pyinstaller
 
 #### Linux
 
@@ -539,7 +559,7 @@ Output is executable `dist/extract_otp_secrets`
 #### Windows
 
 ```
-pyinstaller -y --add-data "%pythonLocation%\__yolo_v3_qr_detector;__yolo_v3_qr_detector" --add-binary "%pythonLocation%\pyzbar\libiconv.dll;pyzbar" --add-binary "%pythonLocation%\pyzbar\libzbar-64.dll;pyzbar" src/extract_otp_secrets.py
+pyinstaller -y --add-data "%pythonLocation%\__yolo_v3_qr_detector;__yolo_v3_qr_detector" --add-binary "%pythonLocation%\pyzbar\libiconv.dll;pyzbar" --add-binary "%pythonLocation%\pyzbar\libzbar-64.dll;pyzbar" --onefile --version-file build\file_version_info.txt src\extract_otp_secrets.py
 ```
 
 Output is `dist\extract_otp_secrets.exe`
