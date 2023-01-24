@@ -248,7 +248,7 @@ python extract_otp_secrets.py = < example_export.png</pre>
 * Prints errors and warnings to stderr (🆕 since v2.0)
 * Prints colored output (🆕 since v2.0)
 * Startable as executable (script, Python, and all dependencies packed in one executable) (🆕 since v2.1)
-    * extract_otp_secrets_linux_x86_64 (>= glibc 2.28)
+    * extract_otp_secrets_linux_x86_64 (requires glibc >= 2.28)
     * extract_otp_secrets_win_x86_64.exe
     * extract_otp_secrets_macos_x86_64 (untested)
 * Prebuilt Docker images provided for amd64 and arm64 (🆕 since v2.0)
