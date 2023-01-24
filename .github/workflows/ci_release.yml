@@ -267,6 +267,7 @@ jobs:
         id: meta
         shell: bash
         run: |
+          cat release_url.txt
           echo "release_url=$(cat release_url.txt)" >> $GITHUB_OUTPUT
       - name: Upload Release Asset
         id: upload-release-asset
