@@ -132,7 +132,6 @@ jobs:
           # Note: tags has to be all lower-case
           pull: true
           tags: |
-            # scit0/extract_otp_secrets:buster
             ghcr.io/scito/extract_otp_secrets:buster
           push: true
 
