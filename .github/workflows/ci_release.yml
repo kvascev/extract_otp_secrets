@@ -229,10 +229,14 @@ jobs:
             ASSET_MIME: application/x-executable
             UPLOAD: false
     steps:
-      - name: List Windows\system32
+      - name: Output path
         if: runner.os == 'Windows'
         # run: ls "$($Env:WinDir)\system32"
         run: echo "$($Env:Path)"
+      - name: Find msvcr120.dll
+        if: runner.os == 'Windows'
+        # run: ls "$($Env:WinDir)\system32"
+        run: Get-Childitem -Path C:\ -Include msvcr120.dll -Recurse -ErrorAction SilentlyContinue
       - uses: actions/checkout@v3
       - name: Set macos macos_python_path
         # TODO use variable for Python version
