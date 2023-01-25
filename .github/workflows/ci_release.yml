@@ -231,7 +231,8 @@ jobs:
     steps:
       - name: List Windows\system32
         if: runner.os == 'Windows'
-        run: ls "$($Env:WinDir)\system32"
+        # run: ls "$($Env:WinDir)\system32"
+        run: echo "$($Env:Path)"
       - uses: actions/checkout@v3
       - name: Set macos macos_python_path
         # TODO use variable for Python version
