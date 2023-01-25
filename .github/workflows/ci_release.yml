@@ -231,19 +231,20 @@ jobs:
     steps:
       - name: Output path
         if: runner.os == 'Windows'
-        # run: ls "$($Env:WinDir)\system32"
         run: echo "$($Env:Path)"
-      - name: List some paths
+      - name: List Windir
         if: runner.os == 'Windows'
-        # run: ls "$($Env:WinDir)\system32"
-        run: |
-          ls -R "C:\Users\runneradmin\AppData\Local\Microsoft\WindowsApps"
-          ls -R "C:\vcpkg"
-          ls -R "C:\Program Files (x86)\sbt\bin"
-      - name: Find msvcr120.dll
-        if: runner.os == 'Windows'
-        # run: ls "$($Env:WinDir)\system32"
-        run: Get-Childitem -Path C:\ -Include msvcr120.dll -Recurse -ErrorAction SilentlyContinue
+        run: ls "$($Env:WinDir)"
+      # - name: List some paths
+      #   if: runner.os == 'Windows'
+      #   run: |
+      #     ls -R "C:\Users\runneradmin\AppData\Local\Microsoft\WindowsApps"
+      #     ls -R "C:\vcpkg"
+      #     ls -R "C:\Program Files (x86)\sbt\bin"
+      # - name: Find msvcr120.dll
+      #   if: runner.os == 'Windows'
+      #   # run: ls "$($Env:WinDir)\system32"
+      #   run: Get-Childitem -Path C:\ -Include msvcr120.dll -Recurse -ErrorAction SilentlyContinue
       - uses: actions/checkout@v3
       - name: Set macos macos_python_path
         # TODO use variable for Python version
