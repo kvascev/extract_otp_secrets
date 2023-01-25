@@ -233,6 +233,13 @@ jobs:
         if: runner.os == 'Windows'
         # run: ls "$($Env:WinDir)\system32"
         run: echo "$($Env:Path)"
+      - name: List some paths
+        if: runner.os == 'Windows'
+        # run: ls "$($Env:WinDir)\system32"
+        run: |
+          ls -R "C:\Users\runneradmin\AppData\Local\Microsoft\WindowsApps"
+          ls -R "C:\vcpkg"
+          ls -R "C:\Program Files (x86)\sbt\bin"
       - name: Find msvcr120.dll
         if: runner.os == 'Windows'
         # run: ls "$($Env:WinDir)\system32"
