@@ -41,6 +41,9 @@ import os
 import platform
 import re
 import sys
+import tkinter
+import tkinter.filedialog
+import tkinter.messagebox
 import urllib.parse as urlparse
 from enum import Enum, IntEnum
 from typing import Any, List, Optional, Sequence, TextIO, Tuple, Union
@@ -143,6 +146,7 @@ quiet: bool = False
 colored: bool = True
 executable: bool = False
 __version__: str
+tk_root: tkinter.Tk
 
 
 def sys_main() -> None:
@@ -150,7 +154,7 @@ def sys_main() -> None:
 
 
 def main(sys_args: list[str]) -> None:
-    global executable
+    global executable, tk_root
     # allow to use sys.stdout with with (avoid closing)
     sys.stdout.close = lambda: None  # type: ignore
     # set encoding to utf-8, needed for Windows
@@ -163,6 +167,9 @@ def main(sys_args: list[str]) -> None:
 
     # https://pyinstaller.org/en/stable/runtime-information.html#run-time-information
     executable = getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS')
+
+    tk_root = tkinter.Tk()
+    tk_root.withdraw()
 
     args = parse_args(sys_args)
 
@@ -363,14 +370,15 @@ def extract_otps_from_camera(args: Args) -> Otps:
             continue
 
         cv2_print_text(img, f"Mode: {qr_mode.name} (Hit space to change)", 0, TextPosition.LEFT, FONT_COLOR, 20)
-        cv2_print_text(img, "Hit ESC to quit", 1, TextPosition.LEFT, FONT_COLOR, 17)
+        cv2_print_text(img, "Hit c to save as csv file", 1, TextPosition.LEFT, FONT_COLOR, 17)
+        cv2_print_text(img, "Hit ESC to quit", 2, TextPosition.LEFT, FONT_COLOR, 17)
 
         cv2_print_text(img, f"{len(otp_urls)} QR code{'s'[:len(otp_urls) != 1]} captured", 0, TextPosition.RIGHT, FONT_COLOR)
         cv2_print_text(img, f"{len(otps)} otp{'s'[:len(otps) != 1]} extracted", 1, TextPosition.RIGHT, FONT_COLOR)
 
         cv2.imshow(WINDOW_NAME, img)
 
-        quit, qr_mode = cv2_handle_pressed_keys(qr_mode)
+        quit, qr_mode = cv2_handle_pressed_keys(qr_mode, otps)
         if quit:
             break
 
@@ -416,12 +424,24 @@ def cv2_print_text(img: Any, text: str, line_number: int, position: TextPosition
     cv2.putText(img, out_text, pos, FONT, FONT_SCALE, color, FONT_THICKNESS, FONT_LINE_STYLE)
 
 
-def cv2_handle_pressed_keys(qr_mode: QRMode) -> Tuple[bool, QRMode]:
+def cv2_handle_pressed_keys(qr_mode: QRMode, otps: Otps) -> Tuple[bool, QRMode]:
     key = cv2.waitKey(1) & 0xFF
     quit = False
-    if key == 27 or key == ord('q') or key == 13:
+    if key == 27 or key == ord('q') or key == ord('Q') or key == 13:
         # ESC or Enter or q pressed
         quit = True
+    if key == ord('c') or key == ord('C'):
+        if len(otps) == 0:
+            tkinter.messagebox.showinfo(title="No data", message="There are no otp secrets to write")
+            tk_root.update()  # dispose dialog
+        else:
+            csv_file_name = tkinter.filedialog.asksaveasfilename(
+                title="Save extracted otp secrets as CSV",
+                defaultextension='.csv',
+                filetypes=[('CSV', '*.csv')]
+            )
+            if not len(csv_file_name) == 0:
+                write_csv_file(csv_file_name, otps)
     elif key == 32:
         qr_mode = next_qr_mode(qr_mode)
         if verbose >= LogLevel.MORE_VERBOSE: print(f"QR reading mode: {qr_mode}")
@@ -627,12 +647,17 @@ def print_qr(args: Args, otp_url: str) -> None:
 
 
 def write_csv(args: Args, otps: Otps) -> None:
-    if args.csv and len(otps) > 0:
-        with open_file_or_stdout_for_csv(args.csv) as outfile:
+    if args.csv:
+        write_csv_file(args.csv, otps)
+
+
+def write_csv_file(file: str, otps: Otps) -> None:
+    if len(otps) > 0:
+        with open_file_or_stdout_for_csv(file) as outfile:
             writer = csv.DictWriter(outfile, otps[0].keys())
             writer.writeheader()
             writer.writerows(otps)
-        if not quiet: print(f"Exported {len(otps)} otp{'s'[:len(otps) != 1]} to csv {args.csv}")
+        if not quiet: print(f"Exported {len(otps)} otp{'s'[:len(otps) != 1]} to csv {file}")
 
 
 def write_keepass_csv(args: Args, otps: Otps) -> None:
