@@ -41,9 +41,6 @@ import os
 import platform
 import re
 import sys
-import tkinter
-import tkinter.filedialog
-import tkinter.messagebox
 import urllib.parse as urlparse
 from enum import Enum, IntEnum
 from typing import Any, List, Optional, Sequence, TextIO, Tuple, Union
@@ -72,6 +69,9 @@ debug_mode = '-d' in sys.argv[1:] or '--debug' in sys.argv[1:]
 try:
     import cv2  # type: ignore # TODO use cv2 types if available
     import numpy as np  # TODO use numpy types if available
+    import tkinter
+    import tkinter.filedialog
+    import tkinter.messagebox
 
     try:
         import pyzbar.pyzbar as zbar  # type: ignore

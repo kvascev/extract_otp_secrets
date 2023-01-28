@@ -36,11 +36,11 @@ jobs:
       - name: Install zbar shared lib for QReader (Linux)
         if: runner.os == 'Linux'
         run: |
-          sudo apt-get install -y libzbar0
+          sudo apt-get install -y libzbar0 python3-tk
       - name: Install zbar shared lib for QReader (macOS)
         if: runner.os == 'macOS'
         run: |
-          brew install zbar
+          brew install zbar python3-tk
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
