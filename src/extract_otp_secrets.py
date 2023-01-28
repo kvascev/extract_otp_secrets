@@ -443,7 +443,7 @@ def cv2_handle_pressed_keys(qr_mode: QRMode, otps: Otps) -> Tuple[bool, QRMode]:
             csv_file_name = tkinter.filedialog.asksaveasfilename(
                 title="Save extracted otp secrets as CSV",
                 defaultextension='.csv',
-                filetypes=[('CSV', '*.csv')]
+                filetypes=[('CSV', '*.csv'), ('All', '*.*')]
             )
             if not len(csv_file_name) == 0:
                 write_csv_file(csv_file_name, otps)
