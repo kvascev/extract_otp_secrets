@@ -65,13 +65,19 @@ else:
 
 
 debug_mode = '-d' in sys.argv[1:] or '--debug' in sys.argv[1:]
+headless: bool = False
+
 
 try:
     import cv2  # type: ignore # TODO use cv2 types if available
     import numpy as np  # TODO use numpy types if available
-    import tkinter
-    import tkinter.filedialog
-    import tkinter.messagebox
+
+    try:
+        import tkinter
+        import tkinter.filedialog
+        import tkinter.messagebox
+    except ImportError:
+        headless = True
 
     try:
         import pyzbar.pyzbar as zbar  # type: ignore
@@ -146,7 +152,6 @@ quiet: bool = False
 colored: bool = True
 executable: bool = False
 __version__: str
-headless: bool = False
 tk_root: tkinter.Tk
 
 
@@ -169,7 +174,7 @@ def main(sys_args: list[str]) -> None:
     # https://pyinstaller.org/en/stable/runtime-information.html#run-time-information
     executable = getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS')
 
-    if qreader_available:
+    if qreader_available and not headless:
         try:
             tk_root = tkinter.Tk()
             tk_root.withdraw()
