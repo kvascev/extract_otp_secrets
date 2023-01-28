@@ -146,6 +146,7 @@ quiet: bool = False
 colored: bool = True
 executable: bool = False
 __version__: str
+headless: bool = False
 tk_root: tkinter.Tk
 
 
@@ -154,7 +155,7 @@ def sys_main() -> None:
 
 
 def main(sys_args: list[str]) -> None:
-    global executable, tk_root
+    global executable, tk_root, headless
     # allow to use sys.stdout with with (avoid closing)
     sys.stdout.close = lambda: None  # type: ignore
     # set encoding to utf-8, needed for Windows
@@ -168,8 +169,12 @@ def main(sys_args: list[str]) -> None:
     # https://pyinstaller.org/en/stable/runtime-information.html#run-time-information
     executable = getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS')
 
-    tk_root = tkinter.Tk()
-    tk_root.withdraw()
+    if qreader_available:
+        try:
+            tk_root = tkinter.Tk()
+            tk_root.withdraw()
+        except tkinter.TclError:
+            headless = True
 
     args = parse_args(sys_args)
 
@@ -370,8 +375,8 @@ def extract_otps_from_camera(args: Args) -> Otps:
             continue
 
         cv2_print_text(img, f"Mode: {qr_mode.name} (Hit space to change)", 0, TextPosition.LEFT, FONT_COLOR, 20)
-        cv2_print_text(img, "Hit c to save as csv file", 1, TextPosition.LEFT, FONT_COLOR, 17)
-        cv2_print_text(img, "Hit ESC to quit", 2, TextPosition.LEFT, FONT_COLOR, 17)
+        cv2_print_text(img, "Press c to save as csv file", 1, TextPosition.LEFT, FONT_COLOR, 17)
+        cv2_print_text(img, "Press ESC to quit", 2, TextPosition.LEFT, FONT_COLOR, 17)
 
         cv2_print_text(img, f"{len(otp_urls)} QR code{'s'[:len(otp_urls) != 1]} captured", 0, TextPosition.RIGHT, FONT_COLOR)
         cv2_print_text(img, f"{len(otps)} otp{'s'[:len(otps) != 1]} extracted", 1, TextPosition.RIGHT, FONT_COLOR)
@@ -430,7 +435,7 @@ def cv2_handle_pressed_keys(qr_mode: QRMode, otps: Otps) -> Tuple[bool, QRMode]:
     if key == 27 or key == ord('q') or key == ord('Q') or key == 13:
         # ESC or Enter or q pressed
         quit = True
-    if key == ord('c') or key == ord('C'):
+    if (key == ord('c') or key == ord('C')) and not headless:
         if len(otps) == 0:
             tkinter.messagebox.showinfo(title="No data", message="There are no otp secrets to write")
             tk_root.update()  # dispose dialog
