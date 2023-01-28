@@ -379,8 +379,8 @@ def extract_otps_from_camera(args: Args) -> Otps:
             qr_mode = next_qr_mode(qr_mode)
             continue
 
-        cv2_print_text(img, f"Mode: {qr_mode.name} (Hit space to change)", 0, TextPosition.LEFT, FONT_COLOR, 20)
-        cv2_print_text(img, "Press c to save as csv file", 1, TextPosition.LEFT, FONT_COLOR, 17)
+        cv2_print_text(img, f"Mode: {qr_mode.name} (Hit SPACE to change)", 0, TextPosition.LEFT, FONT_COLOR, 20)
+        cv2_print_text(img, "Press C to save as csv file", 1, TextPosition.LEFT, FONT_COLOR, 17)
         cv2_print_text(img, "Press ESC to quit", 2, TextPosition.LEFT, FONT_COLOR, 17)
 
         cv2_print_text(img, f"{len(otp_urls)} QR code{'s'[:len(otp_urls) != 1]} captured", 0, TextPosition.RIGHT, FONT_COLOR)
@@ -440,7 +440,7 @@ def cv2_handle_pressed_keys(qr_mode: QRMode, otps: Otps) -> Tuple[bool, QRMode]:
     if key == 27 or key == ord('q') or key == ord('Q') or key == 13:
         # ESC or Enter or q pressed
         quit = True
-    if (key == ord('c') or key == ord('C')) and not headless:
+    if (key == ord('c') or key == ord('C')) and is_not_headless():
         if len(otps) == 0:
             tkinter.messagebox.showinfo(title="No data", message="There are no otp secrets to write")
             tk_root.update()  # dispose dialog
@@ -784,6 +784,12 @@ def do_debug_checks() -> bool:
     import numpy as np  # noqa: F401 # This is only a debug import
     print(color('\nDebug checks passed', colorama.Fore.GREEN))
     return True
+
+
+def is_not_headless() -> bool:
+    if headless:
+        log_warn(f"Cannot open dialog in headless mode")
+    return not headless
 
 
 class PrintVersionAction(argparse.Action):
