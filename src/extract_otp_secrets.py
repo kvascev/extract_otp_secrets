@@ -191,9 +191,10 @@ def main(sys_args: list[str]) -> None:
         sys.exit(0 if do_debug_checks() else 1)
 
     otps = extract_otps(args)
-    write_csv(args, otps)
-    write_keepass_csv(args, otps)
-    write_json(args, otps)
+
+    write_csv(args.csv, otps)
+    write_keepass_csv(args.keepass, otps)
+    write_json(args.json, otps)
 
 
 # workaround for PYTHON <= 3.9 use: pb.MigrationPayload | None
@@ -380,8 +381,8 @@ def extract_otps_from_camera(args: Args) -> Otps:
             continue
 
         cv2_print_text(img, f"Mode: {qr_mode.name} (Hit SPACE to change)", 0, TextPosition.LEFT, FONT_COLOR, 20)
-        cv2_print_text(img, "Press C to save as csv file", 1, TextPosition.LEFT, FONT_COLOR, 17)
-        cv2_print_text(img, "Press ESC to quit", 2, TextPosition.LEFT, FONT_COLOR, 17)
+        cv2_print_text(img, "Press ESC to quit", 1, TextPosition.LEFT, FONT_COLOR, 17)
+        cv2_print_text(img, "Press C/J/K to save as csv/json/keepass file", 2, TextPosition.LEFT, FONT_COLOR, None)
 
         cv2_print_text(img, f"{len(otp_urls)} QR code{'s'[:len(otp_urls) != 1]} captured", 0, TextPosition.RIGHT, FONT_COLOR)
         cv2_print_text(img, f"{len(otps)} otp{'s'[:len(otps) != 1]} extracted", 1, TextPosition.RIGHT, FONT_COLOR)
@@ -440,18 +441,42 @@ def cv2_handle_pressed_keys(qr_mode: QRMode, otps: Otps) -> Tuple[bool, QRMode]:
     if key == 27 or key == ord('q') or key == ord('Q') or key == 13:
         # ESC or Enter or q pressed
         quit = True
-    if (key == ord('c') or key == ord('C')) and is_not_headless():
-        if len(otps) == 0:
-            tkinter.messagebox.showinfo(title="No data", message="There are no otp secrets to write")
-            tk_root.update()  # dispose dialog
+    elif (key == ord('c') or key == ord('C')) and is_not_headless():
+        if has_otps_or_show_warning(otps):
+            pass
         else:
-            csv_file_name = tkinter.filedialog.asksaveasfilename(
+            file_name = tkinter.filedialog.asksaveasfilename(
                 title="Save extracted otp secrets as CSV",
                 defaultextension='.csv',
                 filetypes=[('CSV', '*.csv'), ('All', '*.*')]
             )
-            if not len(csv_file_name) == 0:
-                write_csv_file(csv_file_name, otps)
+            tk_root.update()
+            if len(file_name) > 0:
+                write_csv(file_name, otps)
+    elif (key == ord('j') or key == ord('J')) and is_not_headless():
+        if has_otps_or_show_warning(otps):
+            pass
+        else:
+            file_name = tkinter.filedialog.asksaveasfilename(
+                title="Save extracted otp secrets as JSON",
+                defaultextension='.json',
+                filetypes=[('JSON', '*.json'), ('All', '*.*')]
+            )
+            tk_root.update()
+            if len(file_name) > 0:
+                write_json(file_name, otps)
+    elif (key == ord('k') or key == ord('K')) and is_not_headless():
+        if has_otps_or_show_warning(otps):
+            pass
+        else:
+            file_name = tkinter.filedialog.asksaveasfilename(
+                title="Save extracted otp secrets as KeePass CSV file(s)",
+                defaultextension='.csv',
+                filetypes=[('CSV', '*.csv'), ('All', '*.*')]
+            )
+            tk_root.update()
+            if len(file_name) > 0:
+                write_keepass_csv(file_name, otps)
     elif key == 32:
         qr_mode = next_qr_mode(qr_mode)
         if verbose >= LogLevel.MORE_VERBOSE: print(f"QR reading mode: {qr_mode}")
@@ -656,13 +681,8 @@ def print_qr(args: Args, otp_url: str) -> None:
     qr.print_ascii()
 
 
-def write_csv(args: Args, otps: Otps) -> None:
-    if args.csv:
-        write_csv_file(args.csv, otps)
-
-
-def write_csv_file(file: str, otps: Otps) -> None:
-    if len(otps) > 0:
+def write_csv(file: str, otps: Otps) -> None:
+    if file and len(file) > 0 and len(otps) > 0:
         with open_file_or_stdout_for_csv(file) as outfile:
             writer = csv.DictWriter(outfile, otps[0].keys())
             writer.writeheader()
@@ -670,13 +690,13 @@ def write_csv_file(file: str, otps: Otps) -> None:
         if not quiet: print(f"Exported {len(otps)} otp{'s'[:len(otps) != 1]} to csv {file}")
 
 
-def write_keepass_csv(args: Args, otps: Otps) -> None:
-    if args.keepass and len(otps) > 0:
+def write_keepass_csv(file: str, otps: Otps) -> None:
+    if file and len(file) > 0 and len(otps) > 0:
         has_totp = has_otp_type(otps, 'totp')
         has_hotp = has_otp_type(otps, 'hotp')
-        if args.keepass != '-':
-            otp_filename_totp = args.keepass if has_totp != has_hotp else add_pre_suffix(args.keepass, "totp")
-            otp_filename_hotp = args.keepass if has_totp != has_hotp else add_pre_suffix(args.keepass, "hotp")
+        if file != '-':
+            otp_filename_totp = file if has_totp != has_hotp else add_pre_suffix(file, "totp")
+            otp_filename_hotp = file if has_totp != has_hotp else add_pre_suffix(file, "hotp")
         else:
             otp_filename_totp = otp_filename_hotp = '-'
         if has_totp:
@@ -688,9 +708,9 @@ def write_keepass_csv(args: Args, otps: Otps) -> None:
             if count_hotp_entries: print(f"Exported {count_hotp_entries} hotp entrie{'s'[:count_hotp_entries != 1]} to keepass csv file {otp_filename_hotp}")
 
 
-def write_keepass_totp_csv(otp_filename: str, otps: Otps) -> int:
+def write_keepass_totp_csv(file: str, otps: Otps) -> int:
     count_entries = 0
-    with open_file_or_stdout_for_csv(otp_filename) as outfile:
+    with open_file_or_stdout_for_csv(file) as outfile:
         writer = csv.DictWriter(outfile, ["Title", "User Name", "TimeOtp-Secret-Base32", "Group"])
         writer.writeheader()
         for otp in otps:
@@ -705,9 +725,9 @@ def write_keepass_totp_csv(otp_filename: str, otps: Otps) -> int:
     return count_entries
 
 
-def write_keepass_htop_csv(otp_filename: str, otps: Otps) -> int:
+def write_keepass_htop_csv(file: str, otps: Otps) -> int:
     count_entries = 0
-    with open_file_or_stdout_for_csv(otp_filename) as outfile:
+    with open_file_or_stdout_for_csv(file) as outfile:
         writer = csv.DictWriter(outfile, ["Title", "User Name", "HmacOtp-Secret-Base32", "HmacOtp-Counter", "Group"])
         writer.writeheader()
         for otp in otps:
@@ -723,11 +743,11 @@ def write_keepass_htop_csv(otp_filename: str, otps: Otps) -> int:
     return count_entries
 
 
-def write_json(args: Args, otps: Otps) -> None:
-    if args.json:
-        with open_file_or_stdout(args.json) as outfile:
+def write_json(file: str, otps: Otps) -> None:
+    if file and len(file) > 0:
+        with open_file_or_stdout(file) as outfile:
             json.dump(otps, outfile, indent=4)
-        if not quiet: print(f"Exported {len(otps)} otp{'s'[:len(otps) != 1]} to json {args.json}")
+        if not quiet: print(f"Exported {len(otps)} otp{'s'[:len(otps) != 1]} to json {file}")
 
 
 def has_otp_type(otps: Otps, otp_type: str) -> bool:
@@ -762,6 +782,14 @@ def check_file_exists(filename: str) -> None:
     if filename != '-' and not os.path.isfile(filename):
         abort(f"Input file provided is non-existent or not a file."
               f"\ninput file: {filename}")
+
+
+def has_otps_or_show_warning(otps: Otps) -> bool:
+    if len(otps) == 0:
+            tkinter.messagebox.showinfo(title="No data", message="There are no otp secrets to write")
+            tk_root.update()  # dispose dialog
+
+    return len(otps) > 0
 
 
 def is_binary(line: str) -> bool:

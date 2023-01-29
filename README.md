@@ -129,8 +129,10 @@ Detected QR codes are surrounded with a frame. The color of the frame indicates 
 Key commands:
 
 * Space: change QR code reader
-* 'c': save as csv file (🆕 since v2.2)
-* ESC, ENTER, 'q': quit the program
+* C: save as csv file (🆕 since v2.2)
+* J: save as json file (🆕 since v2.2)
+* K: save as KeePass csv file (🆕 since v2.2)
+* ESC, ENTER, Q: quit the program
 
 The secrets are printed by default to the console. [Set program parameters](#program-help-arguments-and-options) for other types of output, e.g. `--csv exported_secrets.csv`.
 
@@ -298,7 +300,10 @@ python extract_otp_secrets.py = < example_export.png</pre>
     * QREADER_DEEP: [QReader](https://github.com/Eric-Canas/QReader) - very slow in GUI
     * CV2: [QRCodeDetector](https://docs.opencv.org/4.x/de/dc3/classcv_1_1QRCodeDetector.html)
     * CV2_WECHAT: [WeChatQRCode](https://docs.opencv.org/4.x/dd/d63/group__wechat__qrcode.html)
+* Program usable as GUI application without any command line switches (🆕 since v2.2)
     * Save otp secrets as csv file (🆕 since v2.2)
+    * Save otp secrets as json file (🆕 since v2.2)
+    * Save otp secrets as KeePass csv file(s) (🆕 since v2.2)
 * Supports [TOTP](https://www.ietf.org/rfc/rfc6238.txt) and [HOTP](https://www.ietf.org/rfc/rfc4226.txt) standards
 * Generates QR codes
 * Exports to various formats:
